@@ -1,0 +1,57 @@
+name: Build RetroDS.nds
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: devkitpro/devkitarm:latest
+
+    env:
+      DEVKITPRO: /opt/devkitpro
+      DEVKITARM: /opt/devkitpro/devkitARM
+      LIBNDS: /opt/devkitpro/libnds
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show toolchain info
+        run: |
+          echo "DEVKITPRO=$DEVKITPRO"
+          echo "DEVKITARM=$DEVKITARM"
+          echo "LIBNDS=$LIBNDS"
+          echo "PATH=$PATH"
+          ls -la /opt/devkitpro || true
+          ls -la /opt/devkitpro/devkitARM/bin || true
+          /opt/devkitpro/devkitARM/bin/arm-none-eabi-gcc --version
+          which ndstool || true
+          ndstool -h || true
+
+      - name: Build RetroDS
+        run: |
+          export PATH="/opt/devkitpro/devkitARM/bin:/opt/devkitpro/tools/bin:$PATH"
+          make clean || true
+          make
+          if [ ! -f RetroDS.nds ]; then
+            echo "RetroDS.nds was not generated"
+            find . -maxdepth 3 -type f
+            exit 1
+          fi
+
+      - name: Upload RetroDS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RetroDS
+          path: RetroDS.nds
+          if-no-files-found: error
+          retention-days: 30
