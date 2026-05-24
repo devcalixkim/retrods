@@ -23,6 +23,7 @@
 #define UI_C_DARK        (RGB15(4, 4, 5)  | BIT(15)) // primary text
 #define UI_C_ACCENT      (RGB15(8, 16,27) | BIT(15)) // selection border
 #define UI_C_ACCENT_SOFT (RGB15(20,26,31) | BIT(15)) // selection fill tint
+#define UI_C_PANEL       (RGB15(29,29,29) | BIT(15)) // selected card fill — very light gray
 
 // Platform card background colors — saturated enough to read, dark enough
 // that white glyphs have adequate contrast.
