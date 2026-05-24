@@ -4,7 +4,7 @@
 static int s_chan      = -1;
 static int s_countdown = 0;
 
-void soundInit(void) {
+void retroSoundInit(void) {
     soundEnable();
 }
 
